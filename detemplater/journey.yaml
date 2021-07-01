@@ -1,0 +1,30 @@
+
+
+journeys:
+
+  # Basic, first iterations of this tool
+  v1_basic:
+
+    0:
+      id: file_type
+      name: What type of file format is it?
+      choices:
+          1: 
+            text: xls 
+          2: 
+            text: xlsx
+          3:
+            text: ods
+          4: 
+            text: csv
+            pops: iterating_databaker_tabs
+
+    1:
+      id: iterating_databaker_tabs
+      name: Do we want to iterate through multiple databaker tabs?
+      choices:
+          Y:
+            text: "Yes"
+          N:
+            text: "No"
+
