@@ -1,8 +1,10 @@
 import json
+import os
 import yaml
 
 from decisions import Decision
 from results import Results
+from investigation import investigate
 
 class DecisionTree:
     """
@@ -17,7 +19,8 @@ class DecisionTree:
         self.info_json_dict = info_json_dict
         self.results = Results()
 
-        with open("./journey.yaml") as f:
+        this_path = os.path.dirname(os.path.realpath(__file__))
+        with open(f'{this_path}/journey.yaml') as f:
             all_journeys = yaml.load(f, Loader=yaml.FullLoader)
             self.base_journey = all_journeys["journeys"][chosen_journey]
 
@@ -57,30 +60,40 @@ class DecisionTree:
             print(f'{choice} is not a valid response to this question'
                 f' needs to be one of {",".join([str(x) for x in valid_responses])}')
             self.make_a_decision(decision)
+        else:
 
-        # Mark any later steps that are no longer valid due to this choice
-        try:
-            if int_or_str == "int":
-                decision_dict = decision.step_dict["choices"][int(choice)]
-            elif int_or_str == "str":
-                decision_dict = decision.step_dict["choices"][str(choice)]
+            # Get the original dict defining this choice
+            try:
+                if int_or_str == "int":
+                    decision_dict = decision.step_dict["choices"][int(choice)]
+                elif int_or_str == "str":
+                    decision_dict = decision.step_dict["choices"][str(choice)]
+                else:
+                    raise ValueError('Aborting. Choice should have been declared as int or str, '
+                        'the fact it has not means there has been a logic error.')
+
+            except KeyError as err:
+                raise Exception(f'Dict was {json.dumps(decision.step_dict["choices"], indent=2, default=lambda x: str(x))}') from err
+
+            # Investigate for more information on user request
+            if "investigate" in decision_dict:
+                investigate(self.info_json_dict, decision_dict)
+                self.make_a_decision(decision)
+                
             else:
-                raise ValueError('Aborting. Choice should have been declared as int or str, '
-                    'the fact it has not means there has been a logic error.')
+                # Remove any later steps invalidated by this choice
+                if "pops" in decision_dict:
+                    dd = [decision_dict["pops"]] if not isinstance(decision_dict["pops"], list) \
+                        else decision_dict["pops"]
+                    self.invalidated_steps + dd
 
-        except KeyError as err:
-            raise Exception(f'Dict was {json.dumps(decision.step_dict["choices"], indent=2, default=lambda x: str(x))}') from err
+                for attr_k in self.results.__dict__.keys():
+                    if attr_k.startswith("_"):
+                        continue
+                    if attr_k == decision.step_dict["id"]:
+                        setattr(self.results, attr_k, decision.decision_dict[str(choice)]["text"])
 
-        if "pops" in decision_dict:
-            dd = [decision_dict["pops"]] if not isinstance(decision_dict["pops"], list) \
-                else decision_dict["pops"]
-            self.invalidated_steps + dd
-
-        for attr_k in self.results.__dict__.keys():
-            if attr_k.startswith("_"):
-                continue
-            if attr_k == decision.step_dict["id"]:
-                setattr(self.results, attr_k, decision.decision_dict[str(choice)]["text"])
+                print('\n', '-'*30)
                 
     def walk(self):
         return not self.completed_run

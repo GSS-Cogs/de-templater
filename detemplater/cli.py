@@ -16,7 +16,7 @@ def run(info_json: str = "info.json"):
         if not this_step:
             break
 
-        this_step._present_guidance()
+        this_step._present_guidance(info_json_dict)
         this_step._present_choices()
         decision_tree.make_a_decision(this_step)
         print()

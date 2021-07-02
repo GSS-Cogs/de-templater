@@ -6,8 +6,20 @@ journeys:
   v1_basic:
 
     0:
+      id: is_catalog
+      name: Is the resource dataset part of a catalog?
+      choices:
+          1:
+            text: "Yes"
+          2:
+            text: "No"
+          3:
+            text: "Use gssutils to check if metadata is a catalog"
+            investigate: true
+ 
+    1:
       id: file_type
-      name: What type of file format is it?
+      name: What input file format will you be working with?
       choices:
           1: 
             text: xls 
@@ -18,10 +30,12 @@ journeys:
           4: 
             text: csv
             pops: iterating_databaker_tabs
+      guidance:
+        - extract
 
-    1:
+    2:
       id: iterating_databaker_tabs
-      name: Do we want to iterate through multiple databaker tabs?
+      name: Are you going to be looping through multiple databaker tabs with the intention of joining them up?
       choices:
           Y:
             text: "Yes"
