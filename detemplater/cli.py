@@ -2,9 +2,9 @@ from enum import Enum
 import json
 
 from typing import Union
-from decision_tree import DecisionTree
+from detemplater.decision_tree import DecisionTree
 
-def run(info_json: str = "info.json"):
+def run_cli(info_json: str = "info.json"):
     with open(info_json, "r") as f:
         info_json_dict = json.load(f)
 
@@ -23,4 +23,5 @@ def run(info_json: str = "info.json"):
 
     decision_tree.results.output_template()
 
-run()
+if __name__ == "__main__":
+    run_cli()

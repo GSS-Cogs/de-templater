@@ -29,16 +29,51 @@ journeys:
             text: ods
           4: 
             text: csv
-            pops: iterating_databaker_tabs
+            pops:
+              - databaker_paradime
+                how_many_individual_tab_selections
       guidance:
         - extract
 
     2:
-      id: iterating_databaker_tabs
-      name: Are you going to be looping through multiple databaker tabs with the intention of joining them up?
+      id: databaker_paradime
+      name: Which best describes how you are using databaker?
+      should_match: DbParadime
       choices:
-          Y:
-            text: "Yes"
-          N:
-            text: "No"
+          1:
+            text: "You want to iterate through the tabs, joining them into a SINGLE output"
+            pops: 
+              - how_many_individual_tab_selections
+                how_many_individual_outputs
+          2:
+            text: "You want to iterate through the tabs, joining them to create MULTIPLE outputs"
+            pops: 
+              - how_many_individual_tab_selections
+          3:
+            text: "Select by name: You want to select individual tab(s) by name and process them without a loop."
+            pops: 
+              - how_many_individual_outputs
 
+    3:
+      id: how_many_individual_tab_selections
+      name: How many individual tab selections are you going to start with? (if its more than three this is probably the wrong approach)
+      choices:
+          1:
+            text: 1
+          2:
+            text: 2
+          3:
+            text: 3
+
+    4:
+      id: how_many_individual_outputs
+      name: How many individual outputs are you expecting to create from this sheet?
+      choices:
+          1:
+            text: 1
+          2:
+            text: 2
+          3:
+            text: 3
+          4:
+            text: 4

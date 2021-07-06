@@ -2,9 +2,10 @@ import json
 import os
 import yaml
 
-from decisions import Decision
-from results import Results
-from investigation import investigate
+from detemplater.decisions import Decision
+from detemplater.results import Results
+from detemplater.investigation import investigate
+
 
 class DecisionTree:
     """
@@ -25,6 +26,19 @@ class DecisionTree:
             self.base_journey = all_journeys["journeys"][chosen_journey]
 
 
+    def _get_index_from_name(self, step_id):
+        """
+        Given the name of a step, acquire the index
+        of that step from the base journey
+        """
+
+        for index, step_dict in self.base_journey.items():
+            if step_dict["id"] == step_id:
+                return index
+        else:
+            raise ValueError(f'Could not find a step named {step_id}')
+
+
     def next_choice(self):
         """
         Provide the next decision
@@ -32,6 +46,7 @@ class DecisionTree:
         decided = False
 
         while not decided:
+
             self.step_counter += 1
 
             try:
@@ -79,13 +94,14 @@ class DecisionTree:
             if "investigate" in decision_dict:
                 investigate(self.info_json_dict, decision_dict)
                 self.make_a_decision(decision)
-                
+
             else:
                 # Remove any later steps invalidated by this choice
                 if "pops" in decision_dict:
-                    dd = [decision_dict["pops"]] if not isinstance(decision_dict["pops"], list) \
+                    unwanted_steps = [decision_dict["pops"]] if not isinstance(decision_dict["pops"], list) \
                         else decision_dict["pops"]
-                    self.invalidated_steps + dd
+                    for step_id in unwanted_steps:
+                        self.invalidated_steps.append(self._get_index_from_name(step_id))
 
                 for attr_k in self.results.__dict__.keys():
                     if attr_k.startswith("_"):
@@ -94,6 +110,7 @@ class DecisionTree:
                         setattr(self.results, attr_k, decision.decision_dict[str(choice)]["text"])
 
                 print('\n', '-'*30)
-                
+
+
     def walk(self):
         return not self.completed_run
