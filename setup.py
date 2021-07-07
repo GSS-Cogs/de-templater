@@ -11,8 +11,7 @@ setuptools.setup(
     download_url = 'https://github.com/GSS-Cogs/de-templater/archive/0.1.tar.gz',
     keywords = ['template', 'transform', 'pandas', 'databaker'],
     install_requires=[
-        'gssutils @ git+git://github.com/GSS-Cogs/gss-utils.git#egg=gssutils',
-        'PyYAML==5.4.1'
+        'gssutils @ git+git://github.com/GSS-Cogs/gss-utils.git#egg=gssutils'
     ],
     entry_points={
         'console_scripts': [

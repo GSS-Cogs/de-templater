@@ -1,11 +1,9 @@
 import json
-import os
-import yaml
 
 from detemplater.decisions import Decision
 from detemplater.results import Results
 from detemplater.investigation import investigate
-
+from detemplater.journeys import ALL_JOURNEYS 
 
 class DecisionTree:
     """
@@ -19,11 +17,7 @@ class DecisionTree:
         self.invalidated_steps = []
         self.info_json_dict = info_json_dict
         self.results = Results()
-
-        this_path = os.path.dirname(os.path.realpath(__file__))
-        with open(f'{this_path}/journey.yaml') as f:
-            all_journeys = yaml.load(f, Loader=yaml.FullLoader)
-            self.base_journey = all_journeys["journeys"][chosen_journey]
+        self.base_journey = ALL_JOURNEYS[chosen_journey]
 
 
     def _get_index_from_name(self, step_id):
