@@ -30,7 +30,7 @@ class DbParadime(Enum):
     select_by_tab_name = "Select by name: You want to select individual tab(s) by name and process them without a loop."
 
 
-class InvalidLogicError(Exception):
+class InvalidCombinationError(Exception):
     """
     Raised if we've created a combination of decision points that doesn't
     make sense.
@@ -59,15 +59,17 @@ class Results:
         """
 
         if self.file_type == "csv" and self.databaker_paradime:
-            raise InvalidLogicError('You should never be selected a databaker paradime'
+            raise InvalidCombinationError('You should never be selected a databaker paradime'
                 ' for a csv. Your journey logic is wrong.')
 
         if self.file_type == "csv" and self.how_many_individual_tab_selections:
-            raise InvalidLogicError('You should never be selected a number of tabs'
+            raise InvalidCombinationError('You should never be selected a number of tabs'
                 ' for a csv. Your journey logic is wrong.')
 
 
-    def output_template(self, file_name: str = "template.py"):
+    def output_template(self, file_name: str = "main.py"):
+
+        # TODO - make sure main.py does not already exist
 
         snippets_required = [STANDARD_IMPORTS, REUSABLE_FUNCTIONS]
 
@@ -77,6 +79,9 @@ class Results:
             snippets_required.append(SELECTING_SOURCE_DATA_FUNCTIONS_WITH_CATALOG)
         else:
             snippets_required.append(SELECTING_SOURCE_DATA_FUNCTIONS_NO_CATALOG)
+
+        # We also crate Metadata (i.e Scrape) and select a distribution
+        # we only sometimes select a dataset between these actions.
         snippets_required.append(INSTANTIATE_SCRAPER)
         if self.is_catalog:
             snippets_required.append(SELECT_DATASET)
@@ -84,19 +89,22 @@ class Results:
 
         # If we're using databaker, set up appropriate boilerplate
         if self.databaker_paradime:
+
+            # Databaker Scenario 1: We're feeding the tabs to multiple dataframes
             if self.databaker_paradime == DbParadime.iterate_multiple_output.value:
                 snippets_required.append(DATABAKER_ITERATE_TO_MULTIPLE_OUTPUTS_COMMENT)
-
                 for i in range(0, int(self.how_many_individual_outputs)):
                     snippets_required.append(DATABAKER_ITERATE_TO_MULTIPLE_OUTPUTS.format(str(i+1)))
                 for i in range(0, int(self.how_many_individual_outputs)):
                     snippets_required.append(DATABAKER_ITERATE_TO_MULTIPLE_OUTPUTS_LOOP.format(i=str(i+1)))
                 snippets_required.append(CUBES_OUTPUT_ALL)
 
+            # Databaker Scenario 2: We're feeding the tabs to a single dataframe
             elif self.databaker_paradime == DbParadime.iterate_single_output.value:
                 snippets_required.append(DATABAKER_ITERATE_TO_SINGLE_OUTPUT)
                 snippets_required.append(SINGLE_OUTPUT_POST_PROCESSING_AND_WRITE)
 
+            # Databaker Scenario 3: DE wants to select individual tabs by name
             elif self.databaker_paradime == DbParadime.select_by_tab_name.value:
                 snippets_required.append(DATABAKER_SELECT_BY_TAB_NAME_START)
                 for _ in range(0, int(self.how_many_individual_tab_selections)):
