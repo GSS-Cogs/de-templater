@@ -1,7 +1,6 @@
 from enum import Enum
 import json
 
-from typing import Union
 from detemplater.decision_tree import DecisionTree
 
 def run_cli(info_json: str = "info.json"):

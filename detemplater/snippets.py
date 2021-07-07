@@ -196,7 +196,7 @@ while not df:
 """
 
 SINGLE_OUTPUT_POST_PROCESSING_AND_WRITE = """
-# ### 3. Post Processing & Write
+# ### Post Processing & Write
 # Any chances **after** the source data is in a tidy (one observation per row) format should be done here.
 # For some examples, see [Post Processing Basics](https://github.com/GSS-Cogs/de-templater/tree/main/detemplater/docs/postprocessing.md)
 

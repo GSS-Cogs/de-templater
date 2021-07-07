@@ -15,8 +15,8 @@ class Decision:
 
     def _present_guidance(self, info_json_dict: dict):
         """
-        TODO - show whats in the info.json so users get
-        some hint as to what the right choice is
+        Prints a little bit of the info.json to help guide
+        a user choice.
         """
         if "guidance" in self.step_dict:
             print('The following informations from the info.json '
@@ -29,7 +29,7 @@ class Decision:
 
     def _present_choices(self):
         """
-        
+        Presents the user with the available answer to this question.
         """
         print(self.step_dict["name"], "\n")
         for choice, choice_dict in self.step_dict["choices"].items():

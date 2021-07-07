@@ -44,7 +44,7 @@ journeys:
             text: "You want to iterate through the tabs, joining them into a SINGLE output"
             pops: 
               - how_many_individual_tab_selections
-                how_many_individual_outputs
+              - how_many_individual_outputs
           2:
             text: "You want to iterate through the tabs, joining them to create MULTIPLE outputs"
             pops: 
