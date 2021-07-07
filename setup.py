@@ -21,5 +21,6 @@ setuptools.setup(
     },
     dependency_links = [
         'http://github.com/GSS-Cogs/gss-utils/tarball/master#egg=gssutils'
-        ]
+        ],
+    package_data={'detemplater': ['detemplater/journey.yaml']}
 )
