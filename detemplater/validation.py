@@ -1,19 +1,18 @@
 from enum import Enum
 
-# Declare the expected strings in the case of complex choices.
+# Declare the expected strings for deciding the in-play databaker paradime
 class DbParadime(Enum):
     iterate_single_output = "You want to iterate through the tabs, joining them into a SINGLE output"
     iterate_multiple_output = "You want to iterate through the tabs, joining them to create MULTIPLE outputs"
     select_by_tab_name = "Select by name: You want to select individual tab(s) by name and process them without a loop."
 
-# Link "should_match" entries from the yml to above enums.
+# Link "should_match" entries from the journey to any above enums.
 enum_dict = {
     "DbParadime": DbParadime
 }
 
 # Where a validation step is configured (i.e "should_match") confirm the declared Enum matches the input as stated
-# Note: this is aprecaution as using complex strings for control flow without vaidation is probably
-# asking for trouble.
+# Note: this is a precaution as using complex strings for control flow without vaidation is a bad idea
 def validate_step(step_dict: dict):
     should_match = step_dict.get("should_match", None)
     if should_match:

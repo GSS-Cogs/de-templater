@@ -35,7 +35,8 @@ ALL_JOURNEYS = {
           "4": {
             "text": "csv",
             "pops": [
-              "databaker_paradime how_many_individual_tab_selections"
+              "databaker_paradime",
+              "how_many_individual_tab_selections"
             ]
           }
         },
