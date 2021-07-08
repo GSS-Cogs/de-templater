@@ -1,58 +1,68 @@
 
-# Databaker Basics
+## Databaker Resources
 
-## Resources
-
+### Walkthrough
 For a day one introduction to databaker and its usage please see the [databaker-walkthrough](https://github.com/GSS-Cogs/databaker-walkthrough).
 
-## FAQ
 
-### 1. What if I don't wanrt to use all the tabs? (so want to get them out of memory).
+### Selection Methods
+This is an old resource, but has some decent information on selection methods [selection menthods](https://ons-opendata.github.io/databaker_docs/selection.html)
 
-Three approaches.
 
-a.) Don't load it. You can pass tab names to the `.as_databaker()` method of gssutils to specify which tabs you want.
+## Best Practice
 
-This has the smallest resource footprint and is the best choice is viable (if the names are changable or the producer is inconsistent, its not).
+Quick tips that will always apply.
 
+### 1.) Avoid positional references
+
+If you're coding something like `tab.excel_ref('A3')` you're doing it wrong. A column reference ('tab.excel_ref('B')) is typically ok as columns are rarely subject to change, but row or specific cell (or cell range references) are an anti pattern and should only be used in the event all other options are exhausted. 
+
+In order for transforms to be robust you should always aim to use some variation of conditional logic to select cells (as the conditions can still be true in the event of slight structural adjustments).
+
+This _can_ add unecessary complexity, so to mitigtate that please see the section on the anctor pattern detailed below.
+
+
+### 2.) Use an anchor pattern
+
+An anchor pattern is a best practice pattern that adds a decent level of rubustness with minimal complexity.
+
+Consider this data:
+[[[https://raw.githubusercontent.com/GSS-Cogs/databaker-walkthrough/master/databaker-lab-exercises/images/1.png]]
+
+This is a (non robust) selection pattern.
 ```python
-for tab in distribution.as_databaker(sheetids=["Sheet 1", "Sheet 2"]):
-    # do stuff
+groups = tab.excel_ref('A').filter('Group').expand(DOWN).is_not_blank()
+assets = tab.excel_ref('C5:E5')
+names = tab.excel_ref('B5:B13').is_not_blank()
 ```
 
-b.) Conditionally filter out what you need before you begin looping through tabs.
-
-If you are building one big loop for sheets with (more or less) similar handling, this is typically the best option.
-
+This is the same code utilising an anchor pattern.
 ```python
-tabs = distribution.as_databaker()
-tabs_i_want = ["Sheet 1", "Sheet 2"]
-
-# then
-tabs = [x for x in tabs if x in tabs_i_want]
-# or
-tabs = [x for x in tabs if x in tabs_i_want]
-
-assert len(tabs) == len(tabs_we_want), 'missing required tab'
-for tab in tabs:
-    # do stuff
+anchor = tab.excel_ref('A').filter(contains_string("roup")).assert_one()
+assets = anchor.expand(RIGHT).is_not_blank()
+groups = anchor.expand(DOWN).is_not_blank()
+names = anchor.shift(RIGHT).fill(DOWN).is_not_blank()
 ```
 
-c.) Use se the sheet names to exercise flow control.
+The impact:
+* Selecting the anchor will work with inconsistent title casing and regardles of whitespace. It was also let you know immediately id the section fails (i.e if it can't assert one).
+* Should the structure change over time, the latter pattern is considerably more likely to work as it's a reasonable assumption that the rows and columns will maintain the same pattern relative to "Group".
 
-This is typically best if the tab extractions are almost but not quite the same.
 
+### 3.) Use assert_one() whenever you're assuming a selection of one
+
+Any selection you are expecting to select a single cell should always make use of `assert_one()`, this is a huge aid to debugging and maintenance. Note - you do not need to end the command with `assert_one()` for example `tab.filter("Text that should only appear once").assert_one().expand(RIGHT).expand(DOWN)` is perectly valid.
+
+### 4.) Comment your selections
+
+Python is self describing...to a point, but your though processes at the time of writing are not. Any given selection should have a short comment above it explaing what the code is aiming to accomplish. The point being - if (or when) the structure changes then it's **immediately obvious to a fellow engineer** when a given line is no longer fulfiling it's intended purpose. If you don't comment the intention it pretty much guarantees exhaustive future investigation.
+
+examples:
 ```python
-for tab in distribution.as_databaker():
-    if tab.name == "Sheet 1":
-        # Operations that only apply to sheet 1
 
-    elif tab.name == "Sheet 2":
-        # Operations that only apply to sheet 2
+# The anchor cell is the long occurance of the word "Group" in column A
+anchor = tab.excel_ref('A').filter(contains_string("roup")).assert_one()
 
-    else: 
-        raise ValueError(f'Unexpected tab name {tab.name}')
-
-    # Operations that apply to boths sheets.
-
+# The names of the band members, are expected in the column to the right (and below) the group names
+names = anchor.shift(RIGHT).fill(DOWN).is_not_blank()
 ```

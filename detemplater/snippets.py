@@ -11,7 +11,7 @@ cubes = Cubes("info.json")
 REUSABLE_FUNCTIONS = """
 # ### Reusable Functions
 #
-# If you're defining functions for use anywhere in the notebook, put them here. For some guidance, please see [reusable functions](https://github.com/GSS-Cogs/de-templater/tree/main/detemplater/docs/functions.md)
+# If you're defining functions for use anywhere in the notebook, put them here.
 
 # +
 # Please include a doc string explaining the purpose of any functions as well as type hints.
