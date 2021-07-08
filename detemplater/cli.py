@@ -1,4 +1,3 @@
-from enum import Enum
 import json
 
 from detemplater.decision_tree import DecisionTree
