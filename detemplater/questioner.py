@@ -50,7 +50,7 @@ class Questioner:
                 break
 
             try:
-                decision_dict = self.question_series[str(self.step_counter)]
+                decision_dict = self.question_series[self.step_counter]
             except KeyError:
                 raise Exception('Couldn\'t find key {self.step_counter} in '
                     f'{json.dumps(self.question_seres, indent=2)}')
