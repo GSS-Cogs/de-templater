@@ -41,22 +41,26 @@ class Questioner:
         Note: a question will be skipped if it's index (its number as defined
         in the question suite) appears in self.invalidated_steps.
         """
-        decided = False
+        question = None
 
-        while not decided:
+        while not question:
 
-            if self.step_counter == len(self.question_series):
+            if self.step_counter >= len(self.question_series):
                 self.completed_run = True
-                return None
+                break
 
-            decision_dict = self.question_series[self.step_counter]
+            try:
+                decision_dict = self.question_series[str(self.step_counter)]
+            except KeyError:
+                raise Exception('Couldn\'t find key {self.step_counter} in '
+                    f'{json.dumps(self.question_seres, indent=2)}')
 
             if self.step_counter not in self.invalidated_steps:
-                decided = True
+                question = Decision(decision_dict)
             
             self.step_counter += 1
 
-        return Decision(decision_dict)
+        return question
 
 
     def make_a_decision(self, decision: Decision):
