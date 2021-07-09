@@ -126,7 +126,6 @@ Known options:\n
         else:
             snippets_required.append(SIMPLE_PANDAS_TRANSFORM)
 
-
         with open(file_name, "w") as f:
             for snippet in snippets_required:
                 f.write(snippet)
