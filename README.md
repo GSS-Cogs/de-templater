@@ -20,7 +20,9 @@ _Note: It's worth looking through the source file and/or spec a bit before runni
 
 # Tests
 
-From the root of your clones de-templater repo run `python -m unittest discover -v tests`
+From the root of your clones de-templater repo run:
+
+`pipenv run python3 -m unittest discover -v tests`
 
 Otherwise, tests will trigger when you push changes to a branch as per standard github CI practice (this is powered by the included github action).
 
