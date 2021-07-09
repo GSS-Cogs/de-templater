@@ -1,26 +1,30 @@
 import json
 
-from detemplater.decision_tree import DecisionTree
+from detemplater.questioner import Questioner
 
 def run_cli(info_json: str = "info.json"):
+    """
+    Collect information from the user via muleiple choice 
+    questons on the command line
+    """
 
     with open(info_json, "r") as f:
-        info_json_dict = json.load(f)
+        info_json_dict: dict = json.load(f)
 
-    decision_tree = DecisionTree(info_json_dict)
+    question_asker = Questioner(info_json_dict)
 
     print()
-    while decision_tree.walk():
-        this_step = decision_tree.next_choice()
-        if not this_step:
+    while not question_asker.completed_run:
+        a_question = question_asker.next_question()
+        if not a_question:
             break
 
-        this_step._present_guidance(info_json_dict)
-        this_step._present_choices()
-        decision_tree.make_a_decision(this_step)
+        a_question._present_guidance(info_json_dict)
+        a_question._present_choices()
+        question_asker.make_a_decision(a_question)
         print()
 
-    decision_tree.results.output_template()
+    question_asker.results.output_template()
 
 if __name__ == "__main__":
     run_cli()

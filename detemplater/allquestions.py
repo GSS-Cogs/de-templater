@@ -1,7 +1,14 @@
 
-# TODO: via yaml would be more readable
-ALL_JOURNEYS = {
-  "journeys": {
+# A dictionary of question suites.
+
+# Each question suite represents a single series of questions for the intention
+# of creating a template, with that template varying based on the answers provided.
+
+# The intention here is to leave the door open to develop new suites (for the 
+# same or a different purpose) while retaining some debree of backwards compatibility.
+
+# TODO: yaml would be FAR more readable
+QUESTION_SUITES = {
     "v1_basic": {
       "0": {
         "id": "is_catalog",
@@ -104,5 +111,4 @@ ALL_JOURNEYS = {
         }
       }
     }
-  }
 }

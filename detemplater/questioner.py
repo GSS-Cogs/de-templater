@@ -3,24 +3,25 @@ import json
 from detemplater.decisions import Decision
 from detemplater.results import Results
 from detemplater.investigation import investigate
-from detemplater.journeys import ALL_JOURNEYS 
+from detemplater.allquestions import QUESTION_SUITES
 
-class DecisionTree:
+class Questioner:
     """
-    The class that guides users through the appropriate
-    decisions, based on the answers provided thus far.
+    The class that guides the user through the defined journey,
+    collecting user inputs and managing which steps will and will
+    not be shown based on those inputs.
     """
 
-    def __init__(self, info_json_dict: dict = None, chosen_journey : str = 'v1_basic'):
-        self.completed_run = False
-        self.step_counter = -1
-        self.invalidated_steps = []
-        self.info_json_dict = info_json_dict
-        self.results = Results()
-        self.base_journey = ALL_JOURNEYS[chosen_journey]
+    def __init__(self, info_json_dict: dict = None, question_suite : str = 'v1_basic'):
+        self.completed_run: bool = False
+        self.step_counter: int = 0
+        self.invalidated_steps: list = []
+        self.info_json_dict:dict = info_json_dict
+        self.results: Results = Results()
+        self.question_series: dict = QUESTION_SUITES[question_suite]
 
 
-    def _get_index_from_name(self, step_id):
+    def _get_index_from_name(self, step_id: str):
         """
         Given the name of a step, acquire the index
         of that step from the base journey
@@ -33,23 +34,22 @@ class DecisionTree:
             raise ValueError(f'Could not find a step named {step_id}')
 
 
-    def next_choice(self):
+    def next_question(self):
         """
-        Provide the next decision
+        Ask the next question.
+
+        Note: a question will be skipped if it's index (its number as defined
+        in the question suite) appears in self.invalidated_steps.
         """
         decided = False
 
         while not decided:
-
-            self.step_counter += 1
-
-            try:
-                decision_dict = self.base_journey[self.step_counter]
-            except KeyError:
-                return None
+            decision_dict = self.question_series[self.step_counter]
 
             if self.step_counter not in self.invalidated_steps:
                 decided = True
+
+            self.step_counter += 1
 
         return Decision(decision_dict)
 
@@ -104,7 +104,3 @@ class DecisionTree:
                         setattr(self.results, attr_k, decision.decision_dict[str(choice)]["text"])
 
                 print('\n', '-'*30)
-
-
-    def walk(self):
-        return not self.completed_run

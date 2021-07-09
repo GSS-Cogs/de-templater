@@ -31,7 +31,7 @@ There's no real decision tree (i.e no branching logic) to this. When you run the
 
 Each journey consists of multiple questions/steps, with each question step having multiple possible answers referred to as choices.
 
-Every choice has an index number and a text field (the question the user will be asked) as well as a few optional special fields (there are examples of each of these in the default journey).
+Every choice has an index number and a text field (the question the user will be asked) and the default choices for the users - as well as a few optional special fields (there are examples of each of these in the default journey).
 
 * `pops` - a list of identifiers for questions (from later in the journey) we wish to remove if a given choice is selected - this gets us primitive control flow.
 * `guidance` - fields from info.json we wish to be displayed on screen when the question is asked.
