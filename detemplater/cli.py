@@ -4,7 +4,7 @@ from detemplater.questioner import Questioner
 
 def run_cli(info_json: str = "info.json"):
     """
-    Collect information from the user via muleiple choice 
+    Collect information from the user via multiple choice 
     questons on the command line
     """
 

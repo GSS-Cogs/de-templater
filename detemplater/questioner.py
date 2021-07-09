@@ -1,6 +1,6 @@
 import json
 
-from detemplater.decisions import Decision
+from detemplater.question import Question
 from detemplater.results import Results
 from detemplater.investigation import investigate
 from detemplater.allquestions import QUESTION_SUITES
@@ -52,52 +52,51 @@ class Questioner:
             try:
                 decision_dict = self.question_series[self.step_counter]
             except KeyError:
-                raise Exception(type(self.step_counter), type(self.question_series["0"]))
                 raise Exception('Couldn\'t find key {self.step_counter} in '
                     f'{json.dumps(self.question_series, indent=2)}')
 
             if self.step_counter not in self.invalidated_steps:
-                question = Decision(decision_dict)
+                question = Question(decision_dict)
 
             self.step_counter += 1
 
         return question
 
 
-    def make_a_decision(self, decision: Decision):
+    def make_a_decision(self, question: Question):
 
         choice = input("What is your decision.... ")
 
-        if "Y" in decision.step_dict["choices"] and "N" in decision.step_dict["choices"]:
+        if "Y" in question.step_dict["choices"] and "N" in question.step_dict["choices"]:
             valid_responses = ["Y", "N"]
             int_or_str = "str"
         else:
-            valid_responses = [str(x) for x in decision.step_dict["choices"].keys()]
+            valid_responses = [str(x) for x in question.step_dict["choices"].keys()]
             int_or_str = "int"
 
         if choice not in valid_responses:
             print(f'{choice} is not a valid response to this question'
                 f' needs to be one of {",".join([str(x) for x in valid_responses])}')
-            self.make_a_decision(decision)
+            self.make_a_decision(question)
         else:
 
             # Get the original dict defining this choice
             try:
                 if int_or_str == "int":
-                    decision_dict = decision.step_dict["choices"][int(choice)]
+                    decision_dict = question.step_dict["choices"][int(choice)]
                 elif int_or_str == "str":
-                    decision_dict = decision.step_dict["choices"][str(choice)]
+                    decision_dict = question.step_dict["choices"][str(choice)]
                 else:
                     raise ValueError('Aborting. Choice should have been declared as int or str, '
                         'the fact it has not means there has been a logic error.')
 
             except KeyError as err:
-                raise Exception(f'Dict was {json.dumps(decision.step_dict["choices"], indent=2, default=lambda x: str(x))}') from err
+                raise Exception(f'Dict was {json.dumps(question.step_dict["choices"], indent=2, default=lambda x: str(x))}') from err
 
             # Investigate for more information on user request
             if "investigate" in decision_dict:
                 investigate(self.info_json_dict, decision_dict)
-                self.make_a_decision(decision)
+                self.make_a_decision(question)
 
             else:
                 # Remove any later steps invalidated by this choice
@@ -110,7 +109,7 @@ class Questioner:
                 for attr_k in self.results.__dict__.keys():
                     if attr_k.startswith("_"):
                         continue
-                    if attr_k == decision.step_dict["id"]:
-                        setattr(self.results, attr_k, decision.decision_dict[str(choice)]["text"])
+                    if attr_k == question.step_dict["id"]:
+                        setattr(self.results, attr_k, question.decision_dict[str(choice)]["text"])
 
                 print('\n', '-'*30)

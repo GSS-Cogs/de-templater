@@ -3,9 +3,9 @@ import json
 
 from detemplater.validation import validate_step 
 
-class Decision:
+class Question:
     """
-    An individual decision point.
+    An individual question.
     """
     def __init__(self, step_dict: dict):
         self.step_dict = validate_step(step_dict)
