@@ -11,7 +11,7 @@ class TestValidation(unittest.TestCase):
 
     # Test that validation correctly identifies where
     # a databaker paradime has been incorrectly added
-    def test_invalid_step_supperflous_input(self):
+    def test_unexpected_input_is_invalid(self):
 
         paradimes_as_list = [x.value for x in DbParadime]
 
@@ -31,7 +31,7 @@ class TestValidation(unittest.TestCase):
 
     # Test that validation correctly identifies where
     # a definition has changed
-    def test_invalid_step_supperflous_input(self):
+    def test_modified_input_is_invalid(self):
 
         paradimes_as_list = [x.value for x in DbParadime]
 
