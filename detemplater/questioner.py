@@ -44,11 +44,16 @@ class Questioner:
         decided = False
 
         while not decided:
+
+            if self.step_counter == len(self.question_series):
+                self.completed_run = True
+                return None
+
             decision_dict = self.question_series[self.step_counter]
 
             if self.step_counter not in self.invalidated_steps:
                 decided = True
-
+            
             self.step_counter += 1
 
         return Decision(decision_dict)
