@@ -2,7 +2,7 @@
 from enum import Enum
 from typing import Optional
 
-from detemplater.validation import DbParadime
+from detemplater.models import DbParadime
 from detemplater.snippets import (
     STANDARD_IMPORTS,
     REUSABLE_FUNCTIONS,
@@ -21,13 +21,6 @@ from detemplater.snippets import (
     CUBES_OUTPUT_ALL,
     SIMPLE_PANDAS_TRANSFORM
     )
-
-
-# We're gonna use Enum to make things a bit easier to follow
-class DbParadime(Enum):
-    iterate_single_output = "You want to iterate through the tabs, joining them into a SINGLE output"
-    iterate_multiple_output = "You want to iterate through the tabs, joining them to create MULTIPLE outputs"
-    select_by_tab_name = "Select by name: You want to select individual tab(s) by name and process them without a loop."
 
 
 class InvalidCombinationError(Exception):
