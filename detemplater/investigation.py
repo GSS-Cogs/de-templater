@@ -22,8 +22,8 @@ def investigate(info_json_dict: dict, decision_dict: dict):
                 ' you must have provided an info.json file.')
 
         metadata = Scraper(info_json_dict["landingPage"])
-        if hasattr(metadata, "datasets"):
-            print(f'\nINVESTIGATED: This appears to be a catalog of {len(metadata.datasets)} datasets.\n')
+        if hasattr(metadata.catalog, "dataset") > 0:
+            print(f'\nINVESTIGATED: This appears to be a catalog of {len(metadata.catalog.dataset)} datasets.\n')
         else:
             print(f'\nINVESTIGATED: This appears to be a simple dataset (so NOT part of a catalog).\n')
 

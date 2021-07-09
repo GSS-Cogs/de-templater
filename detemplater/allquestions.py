@@ -97,15 +97,12 @@ QUESTION_SUITES = {
         "name": "How many individual outputs are you expecting to create from this sheet?",
         "choices": {
           1: {
-            "text": 1
-          },
-          2: {
             "text": 2
           },
-          3: {
+          2: {
             "text": 3
           },
-          4: {
+          3: {
             "text": 4
           }
         }
