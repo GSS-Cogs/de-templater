@@ -53,11 +53,11 @@ class Questioner:
                 decision_dict = self.question_series[self.step_counter]
             except KeyError:
                 raise Exception('Couldn\'t find key {self.step_counter} in '
-                    f'{json.dumps(self.question_seres, indent=2)}')
+                    f'{json.dumps(self.question_series, indent=2)}')
 
             if self.step_counter not in self.invalidated_steps:
                 question = Decision(decision_dict)
-            
+
             self.step_counter += 1
 
         return question
