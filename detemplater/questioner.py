@@ -27,7 +27,7 @@ class Questioner:
         of that step from the base journey
         """
 
-        for index, step_dict in self.base_journey.items():
+        for index, step_dict in self.question_series.items():
             if step_dict["id"] == step_id:
                 return index
         else:
@@ -52,6 +52,7 @@ class Questioner:
             try:
                 decision_dict = self.question_series[self.step_counter]
             except KeyError:
+                raise Exception(type(self.step_counter), type(self.question_series["0"]))
                 raise Exception('Couldn\'t find key {self.step_counter} in '
                     f'{json.dumps(self.question_series, indent=2)}')
 
