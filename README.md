@@ -1,6 +1,6 @@
 # de-templater
 
-An script that creates standard templates with boilerplate for common data transformation scenarios.
+A script that creates standard templates with boilerplate for common data transformation scenarios.
 
 ## Install
 
