@@ -11,14 +11,11 @@ setuptools.setup(
     download_url = 'https://github.com/GSS-Cogs/de-templater/archive/0.1.tar.gz',
     keywords = ['template', 'transform', 'pandas', 'databaker'],
     install_requires=[
-        'gssutils @ git+git://github.com/GSS-Cogs/gss-utils.git@csvwlib-integration#egg=gssutils'
+        'gssutils @ git+https://github.com/GSS-Cogs/gss-utils.git@csvwlib-integration#egg=gssutils'
     ],
     entry_points={
         'console_scripts': [
             'detemplate = detemplater.cli:run_cli'
             ]
-    },
-    dependency_links = [
-        'http://github.com/GSS-Cogs/gss-utils/tarball/master#egg=gssutils'
-        ]
+    }
 )
