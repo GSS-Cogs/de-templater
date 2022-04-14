@@ -8,10 +8,9 @@ setuptools.setup(
     author = 'Michael Adams',
     author_email = 'michael.adams@ons.gov.uk',
     url = 'https://github.com/GSS-Cogs/de-templater',
-    download_url = 'https://github.com/GSS-Cogs/de-templater/archive/0.1.tar.gz',
     keywords = ['template', 'transform', 'pandas', 'databaker'],
     install_requires=[
-        'gssutils @ git+git://github.com/GSS-Cogs/gss-utils.git#egg=gssutils'
+        'gssutils @ git+https://github.com/GSS-Cogs/gss-utils.git@master#egg=gssutils'
     ],
     entry_points={
         'console_scripts': [
