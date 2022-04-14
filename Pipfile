@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-detemplater = {editable = true, git = "https://github.com/GSS-Cogs/de-templater"}
+detemplater = {editable = true, path = "."}
 
 [dev-packages]
 
